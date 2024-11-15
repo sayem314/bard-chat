@@ -1,101 +1,138 @@
+"use client";
+import { BiMessageRounded, BiRepost, BiHeart, BiShareAlt } from "react-icons/bi";
+import { BsCheckCircleFill } from "react-icons/bs";
 import Image from "next/image";
+
+interface Post {
+  id: number;
+  author: string;
+  handle: string;
+  content: string;
+  timestamp: string;
+  likes: number;
+  comments: number;
+  reposts: number;
+  isVerified?: boolean;
+}
+
+const POSTS: Post[] = [
+  {
+    id: 1,
+    author: "John Doe",
+    handle: "@johndoe",
+    content:
+      "Just built my first Next.js app! 🚀\n\nThe developer experience is amazing. Can't wait to build more with this stack! #NextJS #WebDev",
+    timestamp: "2h ago",
+    likes: 42,
+    comments: 5,
+    reposts: 2,
+    isVerified: true,
+  },
+  {
+    id: 2,
+    author: "Jane Smith",
+    handle: "@janesmith",
+    content:
+      "🎨 Working on some new UI designs for our latest project. Design systems are crucial for maintaining consistency across large applications.\n\nWhat tools do you use for your design workflow?",
+    timestamp: "4h ago",
+    likes: 128,
+    comments: 24,
+    reposts: 8,
+    isVerified: true,
+  },
+  {
+    id: 3,
+    author: "Tech News",
+    handle: "@technews",
+    content:
+      "Breaking: Major updates coming to React 19! 🔥\n\nNew features include:\n- Built-in Suspense improvements\n- Enhanced Server Components\n- Better debugging tools\n\nStay tuned for more details! #React #JavaScript",
+    timestamp: "5h ago",
+    likes: 543,
+    comments: 89,
+    reposts: 112,
+    isVerified: true,
+  },
+  {
+    id: 4,
+    author: "Alice Developer",
+    handle: "@alicedev",
+    content:
+      "Today's coding tip: Always write tests for your components! 🧪\n\nIt might seem like extra work now, but it'll save you hours of debugging later.",
+    timestamp: "6h ago",
+    likes: 76,
+    comments: 12,
+    reposts: 5,
+    isVerified: true,
+  },
+];
+
+const PostInteractions = ({ post }: { post: Post }) => {
+  return (
+    <div className="flex justify-between mt-3 max-w-md text-gray-500 text-sm">
+      <button className="hover:text-[#1d9bf0] group flex items-center gap-1">
+        <div className="p-2 rounded-full group-hover:bg-[#1d9bf0]/10">
+          <BiMessageRounded className="w-5 h-5" />
+        </div>
+        <span>{post.comments}</span>
+      </button>
+      <button className="hover:text-green-500 group flex items-center gap-1">
+        <div className="p-2 rounded-full group-hover:bg-green-500/10">
+          <BiRepost className="w-5 h-5" />
+        </div>
+        <span>{post.reposts}</span>
+      </button>
+      <button className="hover:text-pink-600 group flex items-center gap-1">
+        <div className="p-2 rounded-full group-hover:bg-pink-600/10">
+          <BiHeart className="w-5 h-5" />
+        </div>
+        <span>{post.likes}</span>
+      </button>
+      <button className="hover:text-[#1d9bf0] group flex items-center">
+        <div className="p-2 rounded-full group-hover:bg-[#1d9bf0]/10">
+          <BiShareAlt className="w-5 h-5" />
+        </div>
+      </button>
+    </div>
+  );
+};
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <main className="max-w-[600px] mx-auto">
+        <div className="divide-y divide-gray-200 dark:divide-gray-800">
+          {POSTS.map((post) => (
+            <article
+              key={post.id}
+              className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer transition-colors"
+            >
+              <div className="flex gap-3">
+                <div className="relative w-12 h-12 flex-shrink-0">
+                  <Image
+                    src="https://avatars.githubusercontent.com/u/14138401?v=4"
+                    alt={`${post.author}'s avatar`}
+                    className="rounded-full bg-gray-200 dark:bg-gray-800"
+                    fill
+                    sizes="48px"
+                    priority={post.id <= 2}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <span className="font-bold hover:underline">{post.author}</span>
+                    {post.isVerified && <BsCheckCircleFill className="w-4 h-4 text-[#1d9bf0]" />}
+                    <span className="text-gray-500 text-sm">{post.handle}</span>
+                    <span className="text-gray-500">·</span>
+                    <span className="text-gray-500 text-sm hover:underline">{post.timestamp}</span>
+                  </div>
+                  <p className="mt-1 text-[15px] whitespace-pre-wrap">{post.content}</p>
+                  <PostInteractions post={post} />
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
