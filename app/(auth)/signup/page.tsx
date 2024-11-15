@@ -4,6 +4,7 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiCheck, FiX, FiMail, FiLock, FiCalendar, FiUser } from "react-icons/fi";
+import { AtpAgent } from "@atproto/api";
 
 export default function Signup() {
   const [step, setStep] = useState(1);
@@ -75,12 +76,28 @@ export default function Signup() {
     return isValid;
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step === 1 && validateStep1()) {
       setStep(2);
     } else if (step === 2 && validateStep2()) {
-      // Handle form submission
-      setStep(3);
+      try {
+        const agent = new AtpAgent({ service: "https://bsky.social" });
+
+        await agent.createAccount({
+          email: formData.email,
+          password: formData.password,
+          handle: formData.handle + ".bsky.social",
+        });
+
+        // Handle successful signup
+        setStep(3);
+      } catch (err) {
+        // Handle signup error
+        setErrors((prev) => ({
+          ...prev,
+          handle: (err as Error).message ?? "Failed to create account. Please try again.",
+        }));
+      }
     }
   };
 
