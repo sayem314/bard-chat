@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Signup() {
   const [step, setStep] = useState(1);
@@ -9,12 +10,24 @@ export default function Signup() {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-800">
       <div className="w-full max-w-lg mx-auto p-6 flex flex-col justify-center">
-        <div className="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm rounded-2xl p-8 space-y-6 shadow-xl">
+        {/* Logo Section */}
+        <div className="flex justify-center mb-8">
+          <Image
+            src="/images/Bluesky_Logo.svg"
+            alt="Bluesky Logo"
+            width={48}
+            height={48}
+            className="text-blue-500 dark:text-blue-400"
+          />
+        </div>
+
+        <div className="bg-white dark:bg-gray-700/50 backdrop-blur-sm rounded-2xl p-8 space-y-6 shadow-xl border border-gray-200 dark:border-gray-600/50">
           {/* Header */}
           <div className="text-center mb-2">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent">
               Create Account
             </h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Join the decentralized social network</p>
           </div>
 
           {/* Step Progress */}
