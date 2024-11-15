@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiMail, FiLock, FiGlobe } from "react-icons/fi";
+import { FiLock, FiGlobe } from "react-icons/fi";
+import { RiAtLine } from "react-icons/ri";
 import { AtpAgent } from "@atproto/api";
-import { useRouter } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
@@ -32,10 +33,7 @@ export default function Login() {
     let isValid = true;
 
     if (!formData.email) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = "Email or username is required";
       isValid = false;
     }
 
@@ -132,15 +130,15 @@ export default function Login() {
 
             <div className="space-y-2">
               <label className="text-gray-600 dark:text-gray-400 text-sm font-medium">
-                Email <span className="text-red-500">*</span>
+                Account <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <RiAtLine className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
-                  type="email"
+                  type="text"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="name@example.com"
+                  placeholder="Email or username"
                   className={`w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-gray-800/50 border ${
                     errors.email ? "border-red-500" : "border-gray-200 dark:border-gray-700"
                   } text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-500/40 focus:border-blue-500 transition-all`}
