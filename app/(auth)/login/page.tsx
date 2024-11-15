@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiMail, FiLock } from "react-icons/fi";
+import { FiMail, FiLock, FiGlobe } from "react-icons/fi";
 import { AtpAgent } from "@atproto/api";
 import { useRouter } from "next/navigation";
 
@@ -19,6 +19,9 @@ export default function Login() {
     general: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hosting, setHosting] = useState("https://bsky.social");
+  const [customHosting, setCustomHosting] = useState("");
 
   const validateForm = () => {
     const newErrors = {
@@ -50,13 +53,12 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      const agent = new AtpAgent({ service: "https://bsky.social" });
+      const agent = new AtpAgent({ service: hosting });
       await agent.login({
         identifier: formData.email,
         password: formData.password,
       });
 
-      // Redirect to home page after successful login
       router.push("/");
     } catch (err) {
       setErrors((prev) => ({
@@ -66,6 +68,17 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleHostingSubmit = () => {
+    if (customHosting) {
+      let formattedHosting = customHosting;
+      if (!customHosting.startsWith("http")) {
+        formattedHosting = `https://${customHosting}`;
+      }
+      setHosting(formattedHosting);
+    }
+    setIsModalOpen(false);
   };
 
   return (
@@ -98,6 +111,24 @@ export default function Login() {
                 <p className="text-sm text-red-600 dark:text-red-400">{errors.general}</p>
               </div>
             )}
+
+            <div className="space-y-2">
+              <label className="text-gray-600 dark:text-gray-400 text-sm font-medium">Hosting Provider</label>
+              <div className="flex gap-2 items-center">
+                <div className="relative flex-1">
+                  <FiGlobe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    value={hosting}
+                    readOnly
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-200"
+                  />
+                </div>
+                <Button color="primary" variant="flat" onPress={() => setIsModalOpen(true)} className="px-4">
+                  Change
+                </Button>
+              </div>
+            </div>
 
             <div className="space-y-2">
               <label className="text-gray-600 dark:text-gray-400 text-sm font-medium">
@@ -160,6 +191,69 @@ export default function Login() {
           </form>
         </div>
       </div>
+
+      {/* Add Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        placement="center"
+        classNames={{
+          base: "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800",
+          backdrop: "bg-gray-900/50 backdrop-opacity-40",
+          header: "border-b border-gray-200 dark:border-gray-700",
+          footer: "border-t border-gray-200 dark:border-gray-700",
+          closeButton: "hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600",
+          body: "py-6",
+          wrapper: "bg-gray-100/50 dark:bg-gray-900/50 backdrop-blur-sm",
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-gray-900 dark:text-gray-100">
+                Change Hosting Provider
+              </ModalHeader>
+              <ModalBody>
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-600 dark:text-gray-400">Enter custom hosting URL</label>
+                  <div className="relative">
+                    <FiGlobe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      value={customHosting}
+                      onChange={(e) => setCustomHosting(e.target.value)}
+                      placeholder="https://your-custom-server.com"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-500/40 focus:border-blue-500 transition-all"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                    <FiGlobe className="text-gray-400" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Default Provider</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">https://bsky.social</p>
+                    </div>
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="default" variant="light" onPress={onClose} className="dark:hover:bg-gray-700">
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={() => {
+                    handleHostingSubmit();
+                    onClose();
+                  }}
+                  className="bg-blue-600 dark:bg-blue-500"
+                >
+                  Save Changes
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
