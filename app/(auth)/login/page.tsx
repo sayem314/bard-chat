@@ -244,7 +244,7 @@ export default function Login() {
                       setHosting("https://bsky.social");
                       setIsModalOpen(false);
                     }}
-                    className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                    className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <FiGlobe className="text-gray-400" />
                     <div>
