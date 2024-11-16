@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Spacer } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiLock, FiGlobe } from "react-icons/fi";
@@ -190,11 +190,12 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Add Modal */}
       <Modal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
+        size="xl"
         placement="center"
+        scrollBehavior="inside"
         classNames={{
           base: "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800",
           backdrop: "bg-gray-900/50 backdrop-opacity-40",
@@ -224,7 +225,27 @@ export default function Login() {
                       className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                     />
                   </div>
-                  <div className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    Bluesky is an open network where you can choose your hosting provider. If you&apos;re a developer,
+                    you can host your own server.{" "}
+                    <Link
+                      href="https://atproto.com/guides/self-hosting"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      Learn more
+                    </Link>
+                    .
+                  </p>
+                  <Spacer y={4} />
+                  <div
+                    onClick={() => {
+                      setHosting("https://bsky.social");
+                      setIsModalOpen(false);
+                    }}
+                    className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                  >
                     <FiGlobe className="text-gray-400" />
                     <div>
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Default Provider</p>
