@@ -24,10 +24,8 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-800">
-      <Sidebar currentHandle={currentProfile?.handle ?? null}>
-        {currentProfile && <UserProfile profile={currentProfile} onLogout={handleLogout} />}
-      </Sidebar>
-      <div className="flex-1 ml-64">{children}</div>
+      <Sidebar>{currentProfile && <UserProfile profile={currentProfile} onLogout={handleLogout} />}</Sidebar>
+      <div className="flex-1 ml-56">{children}</div>
     </div>
   );
 }
