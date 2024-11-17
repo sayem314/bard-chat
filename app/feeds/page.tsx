@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 import { accountsAtom } from "@/lib/atoms/user";
-import { BskyAgent } from "@atproto/api";
-import { useRouter } from "next/navigation";
+import { AtpAgent } from "@atproto/api";
 import { Tabs, Tab, Card, Spinner } from "@nextui-org/react";
 import type { AppBskyFeedPost } from "@atproto/api";
 import type { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
@@ -15,6 +15,7 @@ export default function FeedsPage() {
   const [feeds, setFeeds] = useState<FeedViewPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedFeed, setSelectedFeed] = useState("following");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!currentAccount) {
@@ -24,11 +25,7 @@ export default function FeedsPage() {
 
     const fetchFeed = async () => {
       try {
-        if (!currentAccount) {
-          return;
-        }
-
-        const agent = new BskyAgent({ service: currentAccount.host });
+        const agent = new AtpAgent({ service: currentAccount.host });
         await agent.resumeSession({
           did: currentAccount.did,
           handle: currentAccount.handle,
@@ -44,8 +41,9 @@ export default function FeedsPage() {
 
         const { data } = await agent.getTimeline({ limit: 50 });
         setFeeds(data.feed);
+        setError(null);
       } catch (error) {
-        console.error("Error fetching feed:", error);
+        setError(error instanceof Error ? error.message : "An error occurred while fetching the feed");
       } finally {
         setIsLoading(false);
       }
@@ -62,6 +60,10 @@ export default function FeedsPage() {
         <Spinner size="lg" />
       </div>
     );
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
   }
 
   return (
