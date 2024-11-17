@@ -7,8 +7,14 @@ import { accountsAtom } from "@/lib/atoms/user";
 import { AtpAgent } from "@atproto/api";
 import { Tabs, Tab, Card, Spinner } from "@nextui-org/react";
 import { FaRegComment, FaRetweet, FaRegHeart } from "react-icons/fa";
-import type { AppBskyFeedPost } from "@atproto/api";
+import type { AppBskyEmbedExternal, AppBskyFeedDefs } from "@atproto/api";
 import type { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+
+function isExternalEmbed(embed?: AppBskyFeedDefs.PostView["embed"]): embed is AppBskyEmbedExternal.View {
+  return Boolean(
+    embed && "external" in embed && typeof (embed as AppBskyEmbedExternal.View).external?.uri === "string",
+  );
+}
 
 export default function FeedsPage() {
   const [{ currentAccount }] = useAtom(accountsAtom);
@@ -127,9 +133,7 @@ export default function FeedsPage() {
                   </span>
                   <span className="text-gray-500 dark:text-gray-400">@{item.post.author.handle}</span>
                 </div>
-                <p className="mt-1 text-gray-900 dark:text-white">
-                  {(item.post.record as AppBskyFeedPost.Record).text}
-                </p>
+                <p className="mt-1 text-gray-900 dark:text-white">{(item.post.record as { text: string }).text}</p>
                 {item.post.embed && "images" in item.post.embed && (
                   <div className="mt-2 grid grid-cols-2 gap-2">
                     {(item.post.embed.images as Array<{ thumb: string; fullsize: string; alt: string }>).map(
@@ -144,6 +148,39 @@ export default function FeedsPage() {
                         />
                       ),
                     )}
+                  </div>
+                )}
+                {item.post.embed && isExternalEmbed(item.post.embed) && (
+                  <div className="mt-2 border rounded-lg overflow-hidden">
+                    <a
+                      href={item.post.embed.external.uri}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block hover:bg-gray-50 dark:hover:bg-gray-800"
+                    >
+                      {item.post.embed.external.thumb && (
+                        <Image
+                          src={item.post.embed.external.thumb}
+                          alt={item.post.embed.external.title || "Link preview"}
+                          width={300}
+                          height={200}
+                          className="w-full object-cover"
+                        />
+                      )}
+                      <div className="p-3">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                          {item.post.embed.external.title}
+                        </h3>
+                        {item.post.embed.external.description && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                            {item.post.embed.external.description}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-1">
+                          {item.post.embed.external.uri}
+                        </p>
+                      </div>
+                    </a>
                   </div>
                 )}
                 <div className="flex items-center justify-between mt-3 max-w-md">
