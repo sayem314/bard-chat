@@ -74,8 +74,8 @@ export default function FeedsPage() {
   }
 
   return (
-    <div className="mx-auto py-2">
-      <div className="sticky top-0 z-10 backdrop-blur-sm">
+    <div className="w-full">
+      <div className="sticky top-0 z-20 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 w-[600px]">
         <div className="px-4 pt-2 flex justify-center">
           <Image
             src="/images/Bluesky_Logo.svg"
@@ -110,7 +110,7 @@ export default function FeedsPage() {
         </Tabs>
       </div>
 
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-gray-200 dark:divide-gray-700 px-4">
         {feeds.map((item) => (
           <Card
             key={item.post.uri}
