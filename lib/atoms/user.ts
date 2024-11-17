@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import type { ProfileViewDetailed } from "@atproto/api/dist/client/types/app/bsky/actor/defs";
 
 export interface UserState {
   host: string;
@@ -18,6 +19,7 @@ export interface UserState {
 export interface AccountsState {
   accounts: UserState[];
   currentAccount: UserState | null;
+  currentProfile: ProfileViewDetailed | null;
 }
 
 const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
@@ -52,4 +54,5 @@ const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
 export const accountsAtom = atomWithLocalStorage<AccountsState>("accounts", {
   accounts: [],
   currentAccount: null,
+  currentProfile: null,
 });

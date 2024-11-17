@@ -16,7 +16,7 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   const handleLogout = () => {
-    setAccounts({ accounts: [], currentAccount: null });
+    setAccounts({ accounts: [], currentAccount: null, currentProfile: null });
     router.push("/login");
   };
 

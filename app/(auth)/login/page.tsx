@@ -60,6 +60,8 @@ export default function Login() {
         password: formData.password,
       });
 
+      const profile = await agent.getProfile({ actor: response.data.handle });
+
       const newAccount: UserState = {
         host: hosting,
         accessJwt: response.data.accessJwt,
@@ -83,14 +85,16 @@ export default function Login() {
                 index === existingAccountIndex ? newAccount : account,
               ),
               currentAccount: newAccount,
+              currentProfile: profile.data,
             }
           : {
               accounts: [newAccount, ...accounts.accounts],
               currentAccount: newAccount,
+              currentProfile: profile.data,
             };
 
       setAccounts(newState);
-      router.push("/");
+      router.push("/feeds");
     } catch (err) {
       setErrors((prev) => ({
         ...prev,
