@@ -23,9 +23,11 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
   if (!mounted) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-800">
-      <Sidebar>{currentProfile && <UserProfile profile={currentProfile} onLogout={handleLogout} />}</Sidebar>
-      <div className="flex-1 ml-56">{children}</div>
+    <div className="bg-gray-50 dark:bg-gray-800">
+      <div className="flex min-h-screen max-w-6xl mx-auto">
+        <Sidebar>{currentProfile && <UserProfile profile={currentProfile} onLogout={handleLogout} />}</Sidebar>
+        <div className="flex-1 ml-56">{children}</div>
+      </div>
     </div>
   );
 }
