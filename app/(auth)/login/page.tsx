@@ -7,6 +7,8 @@ import Image from "next/image";
 import { FiLock, FiGlobe } from "react-icons/fi";
 import { RiAtLine } from "react-icons/ri";
 import { AtpAgent } from "@atproto/api";
+import { useAtom } from "jotai";
+import { accountsAtom, type UserState } from "@/lib/atoms/user";
 
 export default function Login() {
   const router = useRouter();
@@ -23,6 +25,7 @@ export default function Login() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hosting, setHosting] = useState("https://bsky.social");
   const [customHosting, setCustomHosting] = useState("");
+  const [accounts, setAccounts] = useAtom(accountsAtom);
 
   const validateForm = () => {
     const newErrors = {
@@ -52,9 +55,41 @@ export default function Login() {
     setIsLoading(true);
     try {
       const agent = new AtpAgent({ service: hosting });
-      await agent.login({
+      const response = await agent.login({
         identifier: formData.email,
         password: formData.password,
+      });
+
+      const newAccount: UserState = {
+        host: hosting,
+        accessJwt: response.data.accessJwt,
+        did: response.data.did,
+        handle: response.data.handle,
+        refreshJwt: response.data.refreshJwt,
+        active: response.data.active,
+        didDoc: response.data.didDoc,
+        email: response.data.email,
+        emailAuthFactor: response.data.emailAuthFactor,
+        emailConfirmed: response.data.emailConfirmed,
+        status: response.data.status,
+      };
+
+      const existingAccountIndex = accounts.accounts.findIndex((account) => account.did === newAccount.did);
+
+      setAccounts((prev) => {
+        if (existingAccountIndex !== -1) {
+          const updatedAccounts = [...prev.accounts];
+          updatedAccounts.splice(existingAccountIndex, 1);
+          return {
+            accounts: [newAccount, ...updatedAccounts],
+            currentAccount: 0,
+          };
+        } else {
+          return {
+            accounts: [newAccount, ...prev.accounts],
+            currentAccount: 0,
+          };
+        }
       });
 
       router.push("/");
