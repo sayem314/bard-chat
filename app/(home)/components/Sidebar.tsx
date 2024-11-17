@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { FaHome } from "react-icons/fa";
 import { FaBell, FaEnvelope, FaSearch } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
@@ -26,25 +25,14 @@ export const navigationItems: NavItem[] = [
 
 export function Sidebar({ currentHandle, children }: SidebarProps) {
   return (
-    <div className="w-64 border-r border-gray-700 p-4 fixed h-screen">
-      <div className="mb-8 flex items-center">
-        <Image
-          src="/images/Bluesky_Logo.svg"
-          alt="Bluesky Logo"
-          width={48}
-          height={48}
-          className="text-blue-500 dark:text-blue-400"
-        />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white ml-2">Bard Chat</h1>
-      </div>
+    <div className="w-64 border-r border-gray-700 p-4 fixed h-screen flex flex-col space-y-4">
+      {children}
 
-      <nav className="space-y-2">
+      <nav className="space-y-2 flex-1">
         {navigationItems.map((item) => (
           <NavLink key={item.label} item={item} currentHandle={currentHandle} />
         ))}
       </nav>
-
-      {children}
     </div>
   );
 }
