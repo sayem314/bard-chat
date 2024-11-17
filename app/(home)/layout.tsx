@@ -7,7 +7,7 @@ import { Sidebar } from "./components/Sidebar";
 import { UserProfile } from "./components/UserProfile";
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
-  const [{ currentAccount }, setAccounts] = useAtom(accountsAtom);
+  const [{ currentProfile }, setAccounts] = useAtom(accountsAtom);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -24,8 +24,8 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-800">
-      <Sidebar currentHandle={currentAccount?.handle ?? null}>
-        {currentAccount && <UserProfile handle={currentAccount.handle} onLogout={handleLogout} />}
+      <Sidebar currentHandle={currentProfile?.handle ?? null}>
+        {currentProfile && <UserProfile profile={currentProfile} onLogout={handleLogout} />}
       </Sidebar>
       <div className="flex-1 ml-64">{children}</div>
     </div>
