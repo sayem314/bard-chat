@@ -17,10 +17,39 @@ export interface UserState {
 // Store multiple accounts
 export interface AccountsState {
   accounts: UserState[];
-  currentAccount: UserState | null; // Store full user state instead of index
+  currentAccount: UserState | null;
 }
 
-export const accountsAtom = atom<AccountsState>({
+const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
+  const getInitialValue = (): T => {
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem(key);
+      if (storedValue !== null) {
+        return JSON.parse(storedValue);
+      }
+      return initialValue;
+    }
+    return initialValue;
+  };
+
+  const baseAtom = atom<T>(getInitialValue());
+
+  const derivedAtom = atom(
+    (get) => get(baseAtom),
+    (get, set, newValue: T) => {
+      if (newValue === null) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      }
+      set(baseAtom, newValue);
+    },
+  );
+
+  return derivedAtom;
+};
+
+export const accountsAtom = atomWithLocalStorage<AccountsState>("accounts", {
   accounts: [],
   currentAccount: null,
 });
