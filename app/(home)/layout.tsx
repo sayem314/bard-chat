@@ -34,9 +34,25 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-800">
       <div className="max-w-6xl mx-auto relative">
+        {/* Mobile Bottom Navigation */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+          <nav className="flex justify-around p-2">
+            {navigationItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`p-2 rounded-full transition-colors
+                  ${pathname === item.href ? "text-blue-500" : "text-gray-700 dark:text-gray-300"}`}
+              >
+                <item.icon size={24} />
+              </Link>
+            ))}
+          </nav>
+        </div>
+
         <div className="flex justify-center">
-          {/* Left Sidebar */}
-          <div className="w-[16rem] border-r border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800 fixed left-[max(0px,calc((100%-72rem)/2))]">
+          {/* Left Sidebar - Hide on mobile */}
+          <div className="hidden md:block w-[16rem] border-r border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800 fixed left-[max(0px,calc((100%-72rem)/2))]">
             <div className="h-screen flex flex-col p-3 space-y-3">
               {/* User Profile */}
               {currentProfile && (
@@ -94,13 +110,35 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
 
-          {/* Main Content */}
-          <main className="w-[600px] ml-[16rem] mr-[20rem] min-h-screen border-x border-gray-200 dark:border-gray-700">
-            <div className="w-full">{children}</div>
+          {/* Main Content - Adjust width for mobile */}
+          <main className="w-full md:w-[600px] md:ml-[16rem] md:mr-[20rem] min-h-screen border-x border-gray-200 dark:border-gray-700">
+            {/* Mobile Header */}
+            <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+              {currentProfile && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={currentProfile.avatar || "/default-avatar.png"}
+                    alt={`${currentProfile.displayName}'s avatar`}
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover w-8 h-8"
+                    priority
+                  />
+                  <span className="font-medium text-gray-900 dark:text-white">{currentProfile.displayName}</span>
+                </div>
+              )}
+              <Link
+                href="/compose"
+                className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors text-white"
+              >
+                <MdEdit size={20} />
+              </Link>
+            </div>
+            <div className="w-full pb-16 md:pb-0">{children}</div>
           </main>
 
-          {/* Right Sidebar */}
-          <div className="w-[20rem] flex-shrink-0 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 fixed right-[max(0px,calc((100%-72rem)/2))] top-0 z-30">
+          {/* Right Sidebar - Hide on mobile */}
+          <div className="hidden md:block w-[20rem] flex-shrink-0 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 fixed right-[max(0px,calc((100%-72rem)/2))] top-0 z-30">
             <div className="h-screen">
               <div className="p-4">
                 <div className="sticky top-2">
