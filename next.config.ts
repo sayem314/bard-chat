@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         pathname: "/u/**", // GitHub avatar URLs
       },
+      {
+        protocol: "https",
+        hostname: "cdn.bsky.app",
+        pathname: "/img/**", // Bluesky CDN URLs
+      },
     ],
   },
 };
