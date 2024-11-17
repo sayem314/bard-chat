@@ -17,10 +17,10 @@ export interface UserState {
 // Store multiple accounts
 export interface AccountsState {
   accounts: UserState[];
-  currentAccount: number; // Index of the currently active account
+  currentAccount: UserState | null; // Store full user state instead of index
 }
 
 export const accountsAtom = atom<AccountsState>({
   accounts: [],
-  currentAccount: -1,
+  currentAccount: null,
 });

@@ -82,12 +82,12 @@ export default function Login() {
           updatedAccounts.splice(existingAccountIndex, 1);
           return {
             accounts: [newAccount, ...updatedAccounts],
-            currentAccount: 0,
+            currentAccount: newAccount,
           };
         } else {
           return {
             accounts: [newAccount, ...prev.accounts],
-            currentAccount: 0,
+            currentAccount: newAccount,
           };
         }
       });
